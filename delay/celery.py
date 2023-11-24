@@ -1,5 +1,4 @@
 from celery import Celery
-from tweets.tasks import create_with_delay
 
 app = Celery("delay",
              backend='rpc://',

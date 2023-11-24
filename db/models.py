@@ -13,8 +13,9 @@ class User(Base):
     __tablename__ = 'users'
     id: Mapped[int] = mapped_column(index=True, primary_key=True)
     username: Mapped[str] = mapped_column()
-    registered_at: Mapped[str] = mapped_column(default=datetime.utcnow)
+    registered_at: Mapped[int] = mapped_column(default=datetime.utcnow)
     tweets: Mapped[list['Tweet']] = relationship()
+    first_name: Mapped[str] = mapped_column(default=None, nullable=True)
 
 
 class Tweet(Base):

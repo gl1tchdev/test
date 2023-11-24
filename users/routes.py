@@ -1,32 +1,35 @@
 from fastapi import APIRouter
-from db.schemas import UsersGet, UserCreate, UserBase
-from db.crud import *
+from db import crud, schemas
 
 users = APIRouter(prefix='/user')
 
 
-@users.get('/get', response_model=UsersGet)
+@users.get('/all', response_model=schemas.Users)
 async def get_users():
-    user_list = get_db_users()
+    user_list = crud.get_db_users()
     return {"users": user_list}
 
-@users.get('/get/{user_id}', response_model=UserBase)
-async def user_by_id(user_id: int):
-    user = get_user_by_id(user_id)
+@users.get('/{user_id}', response_model=schemas.User)
+async def get_user_by_id(user_id: int):
+    user = crud.get_user_by_id(user_id)
     return user
 
-@users.get('/get/{username}', response_model=UserBase)
-async def user_by_username(username: str):
-    user = get_user_by_username(username)
-    return user
-
-@users.post('/', response_model=UserCreate)
-async def register(user: UserCreate):
-    db_user = create_user(user)
+@users.post('/', response_model=schemas.UserCreate)
+async def register_user(user: schemas.UserCreate):
+    db_user = crud.create_user(user)
     return db_user
 
+@users.put('/', response_model=schemas.UserShow)
+async def update(user: schemas.UserUpdate):
+    db_user = crud.update_user(user)
+    return db_user
 
-@users.delete('/', response_model=UserCreate)
-async def del_user(user: UserCreate):
-    db_user = delete_user(user)
+@users.delete('/', response_model=schemas.UserShow)
+async def delete_user(user: schemas.UserDelete):
+    db_user = crud.delete_user(user)
+    return db_user
+
+@users.patch('/', response_model=schemas.UserShow)
+async def set_first_name(user: schemas.UserPatch):
+    db_user = crud.set_first_name(user)
     return db_user
